@@ -51,7 +51,7 @@ from telegram.ext import (
 
 # ───────────────────────── الإعدادات ─────────────────────────
 BOT_TOKEN = os.getenv("BOT_TOKEN", "8495428783:AAGCVxJ-DL_9PpmN3DJGZWlXtQHvpPuruxo")
-ADMIN_IDS = {8952384711
+ADMIN_IDS = {8952384711}
     int(x) for x in os.getenv("ADMIN_IDS", "").replace(" ", "").split(",") if x.isdigit()
 }
 DB_PATH = os.getenv("DB_PATH", "bot_data.db")
