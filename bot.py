@@ -7,9 +7,11 @@
 التثبيت:
     pip install -r requirements.txt
 
+قبل التشغيل غيّر قيمتين فقط في قسم "الإعدادات" تحت:
+    BOT_TOKEN  ← توكن البوت من @BotFather
+    ADMIN_IDS  ← آيدي حسابك (تعرفه من أمر /id داخل البوت)
+
 التشغيل:
-    export BOT_TOKEN="123456:ABC..."
-    export ADMIN_IDS="111111111,222222222"     # آيديات الأدمن (تعرف آيديك من /id)
     python pdf_images_bot.py
 """
 
@@ -17,7 +19,6 @@ import asyncio
 import html
 import logging
 import math
-import os
 import re
 import shutil
 import sqlite3
@@ -50,11 +51,12 @@ from telegram.ext import (
 )
 
 # ───────────────────────── الإعدادات ─────────────────────────
-BOT_TOKEN = os.getenv("BOT_TOKEN", "8495428783:AAGCVxJ-DL_9PpmN3DJGZWlXtQHvpPuruxo")
-ADMIN_IDS = {8952384711}
-    int(x) for x in os.getenv("ADMIN_IDS", "").replace(" ", "").split(",") if x.isdigit()
-}
-DB_PATH = os.getenv("DB_PATH", "bot_data.db")
+# ⚠️ غيّر هالقيمتين:
+BOT_TOKEN = "8495428783:AAGCVxJ-DL_9PpmN3DJGZWlXtQHvpPuruxo"   # توكن البوت (وهمي)
+ADMIN_IDS = {8952384711}   # آيدي الأدمن (وهمي) — لأكثر من أدمن: {111111111, 222222222}
+
+PLACEHOLDER_TOKEN = "123456789:AAFakeTokenReplaceWithYourRealBotToken"
+DB_PATH = "bot_data.db"   # ملف قاعدة البيانات
 
 MAX_PDF_MB = 20      # حد تلجرام لتحميل الملفات للبوتات
 MAX_IMAGES = 100     # أقصى عدد صور يستخرجها البوت لكل ملف
@@ -819,26 +821,13 @@ async def on_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
     await hint(update, context)
 
-from flask import Flask
-import threading
-import os
-
-web_app = Flask(__name__)
-@web_app.route('/')
-def home(): return "Bot is Running! 🚀"
-
-def run_web():
-    port = int(os.environ.get("PORT", 8080))
-    web_app.run(host='0.0.0.0', port=port)
-
-threading.Thread(target=run_web, daemon=True).start()
 
 # ───────────────────────── التشغيل ─────────────────────────
 def main():
-    if BOT_TOKEN == "PUT_YOUR_TOKEN_HERE":
-        raise SystemExit("حط توكن البوت في المتغير BOT_TOKEN")
-    if not ADMIN_IDS:
-        logger.warning("ADMIN_IDS فاضي — ما راح تشتغل لوحة الأدمن. حط آيديك بالمتغير.")
+    if BOT_TOKEN == PLACEHOLDER_TOKEN:
+        raise SystemExit("⚠️ غيّر BOT_TOKEN في أعلى الملف وحط توكن البوت الحقيقي.")
+    if 123456789 in ADMIN_IDS:
+        logger.warning("ADMIN_IDS ما زال الآيدي الوهمي — غيّره لآيديك عشان تشتغل لوحة الأدمن.")
 
     init_db()
 
