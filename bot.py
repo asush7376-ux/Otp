@@ -354,6 +354,19 @@ async def on_close(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await q.answer()
     await q.message.delete()
 
+from flask import Flask
+import threading
+import os
+
+web_app = Flask(__name__)
+@web_app.route('/')
+def home(): return "Bot is Running! 🚀"
+
+def run_web():
+    port = int(os.environ.get("PORT", 8080))
+    web_app.run(host='0.0.0.0', port=port)
+
+threading.Thread(target=run_web, daemon=True).start()
 
 # ───────────────────────── التشغيل ─────────────────────────
 def main():
